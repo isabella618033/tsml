@@ -177,8 +177,8 @@ public class TSCHIEFWrapper extends AbstractClassifier implements MultiThreadabl
 
         Experiments.ExperimentalArguments exp = new Experiments.ExperimentalArguments();
 
-        exp.dataReadLocation = "src/main/java/experiments/data/tsc/Univariate_arff/";
-//        exp.dataReadLocation = "src/main/java/experiments/data/tsc/generated/";
+//        exp.dataReadLocation = "src/main/java/experiments/data/tsc/Univariate_arff/";
+        exp.dataReadLocation = "src/main/java/experiments/data/tsc/generated/";
         exp.resultsWriteLocation = "results/";
         exp.classifierName = "TS-CHIEF";
 //        exp.datasetName = "BeetleFly";
@@ -189,32 +189,32 @@ public class TSCHIEFWrapper extends AbstractClassifier implements MultiThreadabl
 
         String[] classifiers = { "TSCHIEF" };
         
-//        File folder = new File(exp.dataReadLocation);
-//        File[] targetFiles = folder.listFiles();
-//        
-//        String[] datasets = new String[targetFiles.length];
-//        int c = 0;
-//        for (int i = 0; i < datasets.length; i++) {
-//        	String name = targetFiles[i].getName();
-//        	String[] meta = name.split("_");
-//        	if ( Arrays.asList(300, 1000).contains(Integer.parseInt(meta[2].substring(1)) ) & (Integer.parseInt(meta[2].substring(1)) + Integer.parseInt(meta[3].substring(1)) < 2000 ) | ( Integer.parseInt(meta[2].substring(1)) <= 500 & meta[0].equals("benchmark")) ){
-//        		datasets[c] = name;
-//        		c++;
-//        		if (name == "ARIMA_S005_N1000_L2500") {
-//        			datasets = new String[targetFiles.length];
-//        			c = 0;
-//        		}
-//        			
-//        	}
-//        }
-//        
-//        for (int i = 0; i< datasets.length; i++) {
-//        	System.out.println(datasets[i]);
-//        }
+        File folder = new File(exp.dataReadLocation);
+        File[] targetFiles = folder.listFiles();
         
-        String[] datasets = {
-        		"Earthquakes",
-        		"ECG200",
+        String[] datasets = new String[targetFiles.length];
+        int c = 0;
+        for (int i = 0; i < datasets.length; i++) {
+        	String name = targetFiles[i].getName();
+        	String[] meta = name.split("_");
+        	if ( Arrays.asList(300, 1000).contains(Integer.parseInt(meta[2].substring(1)) ) & (Integer.parseInt(meta[2].substring(1)) + Integer.parseInt(meta[3].substring(1)) < 1500 ) & !meta[0].equals("benchmark")){
+        		datasets[c] = name;
+        		c++;
+        		if (name == "ARIMA_S005_N1000_L2500") {
+        			datasets = new String[targetFiles.length];
+        			c = 0;
+        		}
+        			
+        	}
+        }
+        
+        for (int i = 0; i< datasets.length; i++) {
+        	System.out.println(datasets[i]);
+        }
+        
+//        String[] datasets = {
+//        		"Earthquakes",
+//        		"ECG200",
 //        		"BeetleFly",
 //        		"BirdChicken",
 //        		"Chinatown",
@@ -255,7 +255,7 @@ public class TSCHIEFWrapper extends AbstractClassifier implements MultiThreadabl
 //        		"Wine",
 //        		"WormsTwoClass",
 //        		"Yoga",
-        };
+//        };
         int numFolds = 5;
 
 

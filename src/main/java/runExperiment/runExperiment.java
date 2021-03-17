@@ -6,14 +6,13 @@ import java.util.ArrayList;
 
 public class runExperiment{
 	public static void main(String[] args) throws Exception {
-		
-		
 		ArrayList<String> mtsProblems = new ArrayList<String>();
 		mtsProblems.add("Heartbeat");
 		mtsProblems.add("SelfRegulationSCP1");
 		mtsProblems.add("FaceDetection");
 		mtsProblems.add("SelfRegulationSCP2");
 		mtsProblems.add("MotorImagery");
+		mtsProblems.add("FingerMovements");
 		
 		ArrayList<String> classifiers = new ArrayList<String>();
 		classifiers.add("DTW_A");
@@ -34,10 +33,11 @@ public class runExperiment{
 				exp.foldId = 1;
 				exp.generateErrorEstimateOnTrainSet = false;
 				exp.run();
+				Thread thread = new Thread(exp);
+				thread.start();
 			}
 		}
-		
-		TSCHIEFWrapper.main(null);
+		//TSCHIEFWrapper.main(null);
 		
 	}
 }
