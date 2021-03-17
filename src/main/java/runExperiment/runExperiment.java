@@ -9,8 +9,8 @@ public class runExperiment{
 		
 		
 		ArrayList<String> mtsProblems = new ArrayList<String>();
-		//mtsProblems.add("Heartbeat");
-		//mtsProblems.add("SelfRegulationSCP1");
+		mtsProblems.add("Heartbeat");
+		mtsProblems.add("SelfRegulationSCP1");
 		mtsProblems.add("FaceDetection");
 		mtsProblems.add("SelfRegulationSCP2");
 		mtsProblems.add("MotorImagery");
