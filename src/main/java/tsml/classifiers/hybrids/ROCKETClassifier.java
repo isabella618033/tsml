@@ -24,6 +24,7 @@ import tsml.transformers.ROCKET;
 import utilities.ClassifierTools;
 import weka.classifiers.Classifier;
 import weka.core.*;
+import weka.core.converters.ConverterUtils.DataSink;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -135,6 +136,7 @@ public class ROCKETClassifier extends EnhancedAbstractClassifier implements Trai
             }
 
             Instances transformedData = rocket.determineOutputFormat(data);
+            
             header = new Instances(transformedData, 0);
 
             for (int i = 0; i < data.numInstances(); i++){
@@ -162,8 +164,23 @@ public class ROCKETClassifier extends EnhancedAbstractClassifier implements Trai
             if (multithreading) {
                 rocket.enableMultiThreading(threads);
             }
-
+            
+            System.out.println("Transforming data");
+            
             Instances transformedData = rocket.fitTransform(data);
+            
+            String outputFilename = "src/main/java/experiments/data/rocketTransformed/test.arff";
+            
+            try {
+              DataSink.write(outputFilename, transformedData);
+            }
+            catch (Exception e) {
+              System.err.println("Failed to save data to: " + outputFilename);
+              e.printStackTrace();
+            }
+            
+            System.out.println("Building Classifier");
+            
             header = new Instances(transformedData, 0);
 
             if (cls instanceof Randomizable) {
@@ -171,6 +188,7 @@ public class ROCKETClassifier extends EnhancedAbstractClassifier implements Trai
             }
 
             cls.buildClassifier(transformedData);
+            System.out.println("Finished building Classifier");
         }
 
         trainResults.setTimeUnit(TimeUnit.NANOSECONDS);
@@ -196,20 +214,20 @@ public class ROCKETClassifier extends EnhancedAbstractClassifier implements Trai
     public static void main(String[] args) throws Exception {
         int fold = 0;
 
-        String dataset = "ItalyPowerDemand";
-        Instances train = DatasetLoading.loadDataNullable("Z:\\ArchiveData\\Univariate_arff\\" + dataset
-                + "\\" + dataset + "_TRAIN.arff");
-        Instances test = DatasetLoading.loadDataNullable("Z:\\ArchiveData\\Univariate_arff\\" + dataset
-                + "\\" + dataset + "_TEST.arff");
+        String dataset = "ARIMA_S003_N1000_L250";
+        Instances train = DatasetLoading.loadDataNullable("src/main/java/experiments/data/tsc/generated/" + dataset
+                + "/" + dataset + "_TRAIN.arff");
+        Instances test = DatasetLoading.loadDataNullable("src/main/java/experiments/data/tsc/generated/" + dataset
+                + "/" + dataset + "_TRAIN.arff");
         Instances[] data = resampleTrainAndTestInstances(train, test, fold);
         train = data[0];
         test = data[1];
 
-        String dataset2 = "ERing";
-        Instances train2 = DatasetLoading.loadDataNullable("Z:\\ArchiveData\\Multivariate_arff\\"+dataset2+
-                "\\"+dataset2+"_TRAIN.arff");
-        Instances test2 = DatasetLoading.loadDataNullable("Z:\\ArchiveData\\Multivariate_arff\\"+dataset2+
-                "\\"+dataset2+"_TEST.arff");
+        String dataset2 = "BasicMotions";
+        Instances train2 = DatasetLoading.loadDataNullable("src/main/java/experiments/data/mtsc/"+dataset2+
+                "/"+dataset2+"_TRAIN.arff");
+        Instances test2 = DatasetLoading.loadDataNullable("src/main/java/experiments/data/mtsc/"+dataset2+
+                "/"+dataset2+"_TEST.arff");
         Instances[] data2 = resampleMultivariateTrainAndTestInstances(train2, test2, fold);
         train2 = data2[0];
         test2 = data2[1];
@@ -217,16 +235,19 @@ public class ROCKETClassifier extends EnhancedAbstractClassifier implements Trai
         ROCKETClassifier c;
         double accuracy;
 
-        c = new ROCKETClassifier();
-        c.seed = fold;
-        c.buildClassifier(train);
-        accuracy = ClassifierTools.accuracy(test, c);
+        // Normal Rocket Classifier with univariate dataset
+//        c = new ROCKETClassifier();
+//        c.seed = fold;
+//        c.buildClassifier(train);
+//        accuracy = ClassifierTools.accuracy(test, c);
+//
+//        System.out.println("ROCKETClassifier accuracy on " + dataset + " fold " + fold + " = " + accuracy);
+//        System.out.println("Build time on " + dataset + " fold " + fold + " = " +
+//                TimeUnit.SECONDS.convert(c.trainResults.getBuildTime(), TimeUnit.NANOSECONDS) + " seconds");
 
-        System.out.println("ROCKETClassifier accuracy on " + dataset + " fold " + fold + " = " + accuracy);
-        System.out.println("Build time on " + dataset + " fold " + fold + " = " +
-                TimeUnit.SECONDS.convert(c.trainResults.getBuildTime(), TimeUnit.NANOSECONDS) + " seconds");
-
+        // Rocket Classifier with multivariate time series
         c = new ROCKETClassifier();
+        c.setNumKernels(100);
         c.seed = fold;
         c.buildClassifier(train2);
         accuracy = ClassifierTools.accuracy(test2, c);
@@ -235,25 +256,27 @@ public class ROCKETClassifier extends EnhancedAbstractClassifier implements Trai
         System.out.println("Build time on " + dataset2 + " fold " + fold + " = " +
                 TimeUnit.SECONDS.convert(c.trainResults.getBuildTime(), TimeUnit.NANOSECONDS) + " seconds");
 
-        c = new ROCKETClassifier();
-        c.seed = fold;
-        c.enableMultiThreading(4);
-        c.buildClassifier(train);
-        accuracy = ClassifierTools.accuracy(test, c);
-
-        System.out.println("ROCKETClassifierMT accuracy on " + dataset + " fold " + fold + " = " + accuracy);
-        System.out.println("Build time on " + dataset + " fold " + fold + " = " +
-                TimeUnit.SECONDS.convert(c.trainResults.getBuildTime(), TimeUnit.NANOSECONDS) + " seconds");
-
-        c = new ROCKETClassifier();
-        c.seed = fold;
-        c.setTrainTimeLimit(400, TimeUnit.MILLISECONDS);
-        c.buildClassifier(train);
-        accuracy = ClassifierTools.accuracy(test, c);
-
-        System.out.println("ROCKETClassifierContract accuracy on " + dataset + " fold " + fold + " = " + accuracy);
-        System.out.println("No Kernels = " + c.rocket.getNumKernels());
-        System.out.println("Build time on " + dataset + " fold " + fold + " = " +
-                TimeUnit.SECONDS.convert(c.trainResults.getBuildTime(), TimeUnit.NANOSECONDS) + " seconds");
+        // Multi-threading with univariate dataset
+//        c = new ROCKETClassifier();
+//        c.seed = fold;
+//        c.enableMultiThreading(4);
+//        c.buildClassifier(train);
+//        accuracy = ClassifierTools.accuracy(test, c);
+//
+//        System.out.println("ROCKETClassifierMT accuracy on " + dataset + " fold " + fold + " = " + accuracy);
+//        System.out.println("Build time on " + dataset + " fold " + fold + " = " +
+//                TimeUnit.SECONDS.convert(c.trainResults.getBuildTime(), TimeUnit.NANOSECONDS) + " seconds");
+//
+//        // limited timing with univariate dataset
+//        c = new ROCKETClassifier();
+//        c.seed = fold;
+//        c.setTrainTimeLimit(400, TimeUnit.MILLISECONDS);
+//        c.buildClassifier(train);
+//        accuracy = ClassifierTools.accuracy(test, c);
+//
+//        System.out.println("ROCKETClassifierContract accuracy on " + dataset + " fold " + fold + " = " + accuracy);
+//        System.out.println("No Kernels = " + c.rocket.getNumKernels());
+//        System.out.println("Build time on " + dataset + " fold " + fold + " = " +
+//                TimeUnit.SECONDS.convert(c.trainResults.getBuildTime(), TimeUnit.NANOSECONDS) + " seconds");
     }
 }

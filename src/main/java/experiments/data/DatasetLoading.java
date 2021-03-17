@@ -356,11 +356,12 @@ public class DatasetLoading {
      */
     public static Instances loadDataThrowable(File targetFile) throws IOException {
         String[] parts = targetFile.getName().split(Pattern.quote("."));
+        
         String extension = "";
         final String ARFF = ".arff", TS = ".ts";
 
-        if (parts.length == 2) {
-            extension = "." + parts[1]; //split will remove the .
+        if (parts.length >= 2) {
+            extension = "." + parts[parts.length - 1]; //split will remove the .
         }
         else {
             //have not been given a specific extension

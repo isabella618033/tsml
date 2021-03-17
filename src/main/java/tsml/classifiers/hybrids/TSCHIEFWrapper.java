@@ -1,4 +1,5 @@
 package tsml.classifiers.hybrids;
+import java.util.Arrays;
 
 import evaluation.MultipleClassifierEvaluation;
 import experiments.Experiments;
@@ -12,12 +13,15 @@ import weka.classifiers.AbstractClassifier;
 import weka.core.Instance;
 import weka.core.Instances;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.google.common.collect.Lists;
+
 public class TSCHIEFWrapper extends AbstractClassifier implements MultiThreadable {
 
-    private int numThreads = 1;
+    private int numThreads = 4;
 
     private int num_trees = 500;
     private int ee = 5;
@@ -173,9 +177,10 @@ public class TSCHIEFWrapper extends AbstractClassifier implements MultiThreadabl
 
         Experiments.ExperimentalArguments exp = new Experiments.ExperimentalArguments();
 
-        exp.dataReadLocation = "Z:\\ArchiveData\\Univariate_arff\\";
-        exp.resultsWriteLocation = "D:\\Temp\\TSCHIEFWekaTest\\";
-        exp.classifierName = "TSCHIEF";
+        exp.dataReadLocation = "src/main/java/experiments/data/tsc/Univariate_arff/";
+//        exp.dataReadLocation = "src/main/java/experiments/data/tsc/generated/";
+        exp.resultsWriteLocation = "results/";
+        exp.classifierName = "TS-CHIEF";
 //        exp.datasetName = "BeetleFly";
 //        exp.foldId = 0;
 //        Experiments.setupAndRunExperiment(exp);
@@ -183,28 +188,75 @@ public class TSCHIEFWrapper extends AbstractClassifier implements MultiThreadabl
 
 
         String[] classifiers = { "TSCHIEF" };
-
+        
+//        File folder = new File(exp.dataReadLocation);
+//        File[] targetFiles = folder.listFiles();
+//        
+//        String[] datasets = new String[targetFiles.length];
+//        int c = 0;
+//        for (int i = 0; i < datasets.length; i++) {
+//        	String name = targetFiles[i].getName();
+//        	String[] meta = name.split("_");
+//        	if ( Arrays.asList(300, 1000).contains(Integer.parseInt(meta[2].substring(1)) ) & (Integer.parseInt(meta[2].substring(1)) + Integer.parseInt(meta[3].substring(1)) < 2000 ) | ( Integer.parseInt(meta[2].substring(1)) <= 500 & meta[0].equals("benchmark")) ){
+//        		datasets[c] = name;
+//        		c++;
+//        		if (name == "ARIMA_S005_N1000_L2500") {
+//        			datasets = new String[targetFiles.length];
+//        			c = 0;
+//        		}
+//        			
+//        	}
+//        }
+//        
+//        for (int i = 0; i< datasets.length; i++) {
+//        	System.out.println(datasets[i]);
+//        }
+        
         String[] datasets = {
-                "Beef", // 30,30,470,5
-                "Car", // 60,60,577,4
-                "Coffee", // 28,28,286,2
-                "CricketX", // 390,390,300,12
-                "CricketY", // 390,390,300,12
-                "CricketZ", // 390,390,300,12
-                "DiatomSizeReduction", // 16,306,345,4
-                "fish", // 175,175,463,7
-                "GunPoint", // 50,150,150,2
-                "ItalyPowerDemand", // 67,1029,24,2
-                "MoteStrain", // 20,1252,84,2
-                "OliveOil", // 30,30,570,4
-                "Plane", // 105,105,144,7
-                "SonyAIBORobotSurface1", // 20,601,70,2
-                "SonyAIBORobotSurface2", // 27,953,65,2
-                "SyntheticControl", // 300,300,60,6
-                "Trace", // 100,100,275,4
-                "TwoLeadECG", // 23,1139,82,2
+        		"Earthquakes",
+        		"ECG200",
+        		"BeetleFly",
+        		"BirdChicken",
+        		"Chinatown",
+        		"Coffee",
+        		"Computers",
+        		"DistalPhalanxOutlineCorrect",
+        		"DodgerLoopGame",
+        		"DodgerLoopWeekend",
+        		"ECGFiveDays",
+        		"FordA",
+        		"FordB",
+        		"FreezerRegularTrain",
+        		"FreezerSmallTrain",
+        		"GunPoint",
+        		"GunPointAgeSpan",
+        		"GunPointMaleVersusFemale",
+        		"GunPointOldVersusYoung",
+        		"Ham",
+        		"HandOutlines",
+        		"Herring",
+        		"HouseTwenty",
+        		"ItalyPowerDemand",
+        		"Lightning2",
+        		"MiddlePhalanxOutlineCorrect",
+        		"MoteStrain",
+        		"PhalangesOutlinesCorrect",
+        		"PowerCons",
+        		"ProximalPhalanxOutlineCorrect",
+        		"SemgHandGenderCh2",
+        		"ShapeletSim",
+        		"SonyAIBORobotSurface1",
+        		"SonyAIBORobotSurface2",
+        		"Strawberry",
+        		"ToeSegmentation1",
+        		"ToeSegmentation2",
+        		"TwoLeadECG",
+        		"Wafer",
+        		"Wine",
+        		"WormsTwoClass",
+        		"Yoga",
         };
-        int numFolds = 30;
+        int numFolds = 1;
 
 
         //Because of the static app context, best not run multithreaded, stick to single threaded
@@ -212,7 +264,11 @@ public class TSCHIEFWrapper extends AbstractClassifier implements MultiThreadabl
             for (int f = 0; f < numFolds; f++) {
                 exp.datasetName = dataset;
                 exp.foldId = f;
-                Experiments.setupAndRunExperiment(exp);
+                try {
+                	Experiments.setupAndRunExperiment(exp);	
+                }catch(Exception  E) {
+                	System.out.println(E);
+                }
             }
         }
 
