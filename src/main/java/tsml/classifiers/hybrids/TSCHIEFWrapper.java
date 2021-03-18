@@ -180,25 +180,19 @@ public class TSCHIEFWrapper extends AbstractClassifier implements MultiThreadabl
         exp.dataReadLocation = "src/main/java/experiments/data/tsc/Univariate_arff/";
 //        exp.dataReadLocation = "src/main/java/experiments/data/tsc/generated/";
         exp.resultsWriteLocation = "results/";
-
+        exp.classifierName = "TS-CHIEF";
         String[] classifiers = { "TSCHIEF" };
         
 //        File folder = new File(exp.dataReadLocation);
 //        File[] targetFiles = folder.listFiles();
-//        
-//        String[] datasets = new String[targetFiles.length];
+//        ArrayList<String> datasets = new ArrayList<String>();
+        
 //        int c = 0;
 //        for (int i = 0; i < datasets.length; i++) {
 //        	String name = targetFiles[i].getName();
 //        	String[] meta = name.split("_");
 //        	if ( Arrays.asList(300, 1000).contains(Integer.parseInt(meta[2].substring(1)) ) & (Integer.parseInt(meta[2].substring(1)) + Integer.parseInt(meta[3].substring(1)) < 1500 ) & !meta[0].equals("benchmark")){
-//        		datasets[c] = name;
-//        		c++;
-//        		if (name == "ARIMA_S005_N1000_L2500") {
-//        			datasets = new String[targetFiles.length];
-//        			c = 0;
-//        		}
-//        			
+//        		datasets.add(name)
 //        	}
 //        }
 //        
