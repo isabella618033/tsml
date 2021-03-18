@@ -9,16 +9,16 @@ public class runExperiment{
 		 String[] mtsProblems = {
 				 "Heartbeat",
 				 "SelfRegulationSCP1",
-				 "FaceDetection",
 				 "SelfRegulationSCP2",
 				 "MotorImagery",
-				 "FingerMovements"
+				 "FingerMovements",
+				 "FaceDetection"
 		 };
 		
 		String[] classifiers = {
 				"DTW_A",
 				"CIF",
-				"Rocket",
+				"ROCKET",
 		};
 
 		for (String problem : mtsProblems) {

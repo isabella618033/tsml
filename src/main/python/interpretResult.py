@@ -8,21 +8,26 @@ mtsSummaryDF = pd.read_csv('/media/Isabunbun shared folder/TSC-Share/summaryMult
 classifiers = listdir("/home/isabella/Documents/TSC/tsml/results")
 col = ["simModel", "simParam",  "sampleNum", "sampleLength", "classification","accuracy", "typeI", "typeII"]
 resultDF = pd.DataFrame(columns = col)
-UEANaming = {'SelfRegulationSCP1': 'SelfRegulationSCP1', 'SelfRegulationsSCP2':'SelfRegulationSCP2', 'FingerMovement':'FingerMovements', 'MotorImagery':'MotorImagery', 'Heartbeat':'Heartbeat', 'FingerMovements':'FingerMovements'}
-print(classifiers)
-print(mtsSummaryDF)
+# UEANaming = {'FaceDetection':'FaceDetection',
+#              'SelfRegulationSCP1': 'SelfRegulationSCP1',
+#              'SelfRegulationsSCP2':'SelfRegulationSCP2',
+#              'FingerMovement':'FingerMovements',
+#              'MotorImagery':'MotorImagery',
+#              'Heartbeat':'Heartbeat',
+#              'FingerMovements':'FingerMovements'}
+
 for classifier in classifiers:
     resultDir = f"/home/isabella/Documents/TSC/tsml/results/{classifier}/Predictions/"
     dataSets =  listdir(resultDir)
+    print(classifier)
     print(dataSets)
     for ds in dataSets:
         if ds == "null":
             continue
         split = ds.split('_')
-        print(split)
         if len(split) == 1:
             simModel = "UEA"
-            simParam = UEANaming[split[0]]
+            simParam = split[0]
             simNum = mtsSummaryDF.loc[simParam, 'TrainSize'] + mtsSummaryDF.loc[simParam, 'TestSize']
             simLength = mtsSummaryDF.loc[simParam, 'SeriesLength']
             simDim = mtsSummaryDF.loc[simParam, 'NumDimensions']
