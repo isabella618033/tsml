@@ -149,24 +149,24 @@ public class TSCHIEFWrapper extends AbstractClassifier implements MultiThreadabl
         return pf.predict_proba(new TimeSeries(getSeries(inst), -1), numClasses);
     }
 
-    @Override
-    public double classifyInstance(Instance inst) throws Exception {
-        double[] probs = distributionForInstance(inst);
-
-        int maxClass = 0;
-        for (int n = 1; n < probs.length; ++n) {
-            if (probs[n] > probs[maxClass]) {
-                maxClass = n;
-            }
-            else if (probs[n] == probs[maxClass]){
-                if (AppContext.rand.nextBoolean()){
-                    maxClass = n;
-                }
-            }
-        }
-
-        return maxClass;
-    }
+//    @Override
+//    public double classifyInstance(Instance inst) throws Exception {
+//        double[] probs = distributionForInstance(inst);
+//
+//        int maxClass = 0;
+//        for (int n = 1; n < probs.length; ++n) {
+//            if (probs[n] > probs[maxClass]) {
+//                maxClass = n;
+//            }
+//            else if (probs[n] == probs[maxClass]){
+//                if (AppContext.rand.nextBoolean()){
+//                    maxClass = n;
+//                }
+//            }
+//        }
+//
+//        return maxClass;
+//    }
 
     public static void main(String[] args) throws Exception {
 
@@ -177,85 +177,79 @@ public class TSCHIEFWrapper extends AbstractClassifier implements MultiThreadabl
 
         Experiments.ExperimentalArguments exp = new Experiments.ExperimentalArguments();
 
-//        exp.dataReadLocation = "src/main/java/experiments/data/tsc/Univariate_arff/";
-        exp.dataReadLocation = "src/main/java/experiments/data/tsc/generated/";
+        exp.dataReadLocation = "src/main/java/experiments/data/tsc/Univariate_arff/";
+//        exp.dataReadLocation = "src/main/java/experiments/data/tsc/generated/";
         exp.resultsWriteLocation = "results/";
-        exp.classifierName = "TS-CHIEF";
-//        exp.datasetName = "BeetleFly";
-//        exp.foldId = 0;
-//        Experiments.setupAndRunExperiment(exp);
-
-
 
         String[] classifiers = { "TSCHIEF" };
         
-        File folder = new File(exp.dataReadLocation);
-        File[] targetFiles = folder.listFiles();
+//        File folder = new File(exp.dataReadLocation);
+//        File[] targetFiles = folder.listFiles();
+//        
+//        String[] datasets = new String[targetFiles.length];
+//        int c = 0;
+//        for (int i = 0; i < datasets.length; i++) {
+//        	String name = targetFiles[i].getName();
+//        	String[] meta = name.split("_");
+//        	if ( Arrays.asList(300, 1000).contains(Integer.parseInt(meta[2].substring(1)) ) & (Integer.parseInt(meta[2].substring(1)) + Integer.parseInt(meta[3].substring(1)) < 1500 ) & !meta[0].equals("benchmark")){
+//        		datasets[c] = name;
+//        		c++;
+//        		if (name == "ARIMA_S005_N1000_L2500") {
+//        			datasets = new String[targetFiles.length];
+//        			c = 0;
+//        		}
+//        			
+//        	}
+//        }
+//        
+//        for (int i = 0; i< datasets.length; i++) {
+//        	System.out.println(datasets[i]);
+//        }
         
-        String[] datasets = new String[targetFiles.length];
-        int c = 0;
-        for (int i = 0; i < datasets.length; i++) {
-        	String name = targetFiles[i].getName();
-        	String[] meta = name.split("_");
-        	if ( Arrays.asList(300, 1000).contains(Integer.parseInt(meta[2].substring(1)) ) & (Integer.parseInt(meta[2].substring(1)) + Integer.parseInt(meta[3].substring(1)) < 1500 ) & !meta[0].equals("benchmark")){
-        		datasets[c] = name;
-        		c++;
-        		if (name == "ARIMA_S005_N1000_L2500") {
-        			datasets = new String[targetFiles.length];
-        			c = 0;
-        		}
-        			
-        	}
-        }
-        
-        for (int i = 0; i< datasets.length; i++) {
-        	System.out.println(datasets[i]);
-        }
-        
-//        String[] datasets = {
-//        		"Earthquakes",
-//        		"ECG200",
-//        		"BeetleFly",
-//        		"BirdChicken",
-//        		"Chinatown",
-//        		"Coffee",
-//        		"Computers",
-//        		"DistalPhalanxOutlineCorrect",
-//        		"DodgerLoopGame",
-//        		"DodgerLoopWeekend",
-//        		"ECGFiveDays",
-//        		"FordA",
-//        		"FordB",
-//        		"FreezerRegularTrain",
-//        		"FreezerSmallTrain",
-//        		"GunPoint",
-//        		"GunPointAgeSpan",
-//        		"GunPointMaleVersusFemale",
-//        		"GunPointOldVersusYoung",
-//        		"Ham",
-//        		"HandOutlines",
-//        		"Herring",
-//        		"HouseTwenty",
-//        		"ItalyPowerDemand",
-//        		"Lightning2",
-//        		"MiddlePhalanxOutlineCorrect",
-//        		"MoteStrain",
-//        		"PhalangesOutlinesCorrect",
-//        		"PowerCons",
-//        		"ProximalPhalanxOutlineCorrect",
-//        		"SemgHandGenderCh2",
-//        		"ShapeletSim",
-//        		"SonyAIBORobotSurface1",
-//        		"SonyAIBORobotSurface2",
-//        		"Strawberry",
-//        		"ToeSegmentation1",
-//        		"ToeSegmentation2",
-//        		"TwoLeadECG",
-//        		"Wafer",
-//        		"Wine",
-//        		"WormsTwoClass",
-//        		"Yoga",
-//        };
+        String[] datasets = {
+        		//"Earthquakes",
+        		//"ECG200",
+        		"BeetleFly",
+        		"BirdChicken",
+        		"Chinatown",
+        		"Coffee",
+        		"Computers",
+        		"DistalPhalanxOutlineCorrect",
+        		"DodgerLoopGame",
+        		"DodgerLoopWeekend",
+        		"ECGFiveDays",
+        		"FordA",
+        		"FordB",
+        		"FreezerRegularTrain",
+        		"FreezerSmallTrain",
+        		"GunPoint",
+        		"GunPointAgeSpan",
+        		"GunPointMaleVersusFemale",
+        		"GunPointOldVersusYoung",
+        		"Ham",
+        		"HandOutlines",
+        		"Herring",
+        		"HouseTwenty",
+        		"ItalyPowerDemand",
+        		"Lightning2",
+        		"MiddlePhalanxOutlineCorrect",
+        		"MoteStrain",
+        		"PhalangesOutlinesCorrect",
+        		"PowerCons",
+        		"ProximalPhalanxOutlineCorrect",
+        		"SemgHandGenderCh2",
+        		"ShapeletSim",
+        		"SonyAIBORobotSurface1",
+        		"SonyAIBORobotSurface2",
+        		"Strawberry",
+        		"ToeSegmentation1",
+        		"ToeSegmentation2",
+        		"TwoLeadECG",
+        		"Wafer",
+        		"Wine",
+        		"WormsTwoClass",
+        		"Yoga",
+        };
         int numFolds = 5;
 
 
@@ -273,13 +267,13 @@ public class TSCHIEFWrapper extends AbstractClassifier implements MultiThreadabl
         }
 
 
-        MultipleClassifierEvaluation mce = new MultipleClassifierEvaluation(exp.resultsWriteLocation +"ANA/", "sanityCheck", numFolds);
-        mce.setBuildMatlabDiagrams(false);
-        mce.setTestResultsOnly(true);
-        mce.setDatasets(datasets);
-        mce.readInClassifier(exp.classifierName, exp.resultsWriteLocation);
-//        mce.readInClassifier("DTWCV", "Z:/Results_7_2_19/FinalisedRepo/"); //no probs, leaving it
-        mce.readInClassifier("PF", "Z:\\Results Working Area\\Benchmarking\\PF\\tsml\\");
-        mce.runComparison();
+//        MultipleClassifierEvaluation mce = new MultipleClassifierEvaluation(exp.resultsWriteLocation +"ANA/", "sanityCheck", numFolds);
+//        mce.setBuildMatlabDiagrams(false);
+//        mce.setTestResultsOnly(true);
+//        mce.setDatasets(datasets);
+//        mce.readInClassifier(exp.classifierName, exp.resultsWriteLocation);
+////        mce.readInClassifier("DTWCV", "Z:/Results_7_2_19/FinalisedRepo/"); //no probs, leaving it
+//        mce.readInClassifier("PF", "Z:\\Results Working Area\\Benchmarking\\PF\\tsml\\");
+//        mce.runComparison();
     }
 }
