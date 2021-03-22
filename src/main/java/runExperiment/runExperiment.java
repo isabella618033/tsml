@@ -10,14 +10,14 @@ public class runExperiment{
 				 "Heartbeat",
 				 "SelfRegulationSCP1",
 				 "SelfRegulationSCP2",
-				 "MotorImagery",
+				 //"MotorImagery",
 				 "FingerMovements",
-				 "FaceDetection"
+				 //"FaceDetection"
 		 };
 		
 		String[] classifiers = {
-				"DTW_A",
-				"CIF",
+				//"DTW_A",
+				//"CIF",
 				"ROCKET",
 		};
 
@@ -30,9 +30,10 @@ public class runExperiment{
 				exp.resultsWriteLocation = "results/";
 				exp.classifierName = classifier;
 				exp.datasetName = problem;
-				exp.foldId = 1;
+				exp.foldId = 10;
 				exp.generateErrorEstimateOnTrainSet = false;
-				exp.run();
+				//exp.run();
+				System.out.println(java.lang.Thread.activeCount());
 				Thread thread = new Thread(exp);
 				thread.start();
 			}
