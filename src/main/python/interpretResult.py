@@ -73,7 +73,7 @@ def getbmClassifierResult():
             simModel, simParam, simNum, simLength = setUpClassificationParam(split, *backgroundDF)
             ACC, TI, TII, foldCount = fetchTITII(resultDir, ds, simParam)
             if foldCount >= 1:
-                resultDF = resultDF.append({'simModel': simModel, "simParam": simParam,"classification": classifier , "sampleNum": simNum, "sampleLength": simLength, "classification": classifier, 'accuracy': ACC, 'typeI': TI, 'typeII':TII, 'folds': foldCount} , ignore_index = True)
+                resultDF = resultDF.append({'simModel': simModel, "simParam": simParam,"classification": classifier , "sampleNum": simNum, "sampleLength": simLength, "classification": classifier, 'accuracy': ACC, 'typeI': TI, 'typeII':TII, 'fold': foldCount} , ignore_index = True)
     resultDF.to_csv("/media/Isabunbun shared folder/TSC-Share/bmClassifiers_resultSummary.csv")
 
 if __name__ == "__main__":
