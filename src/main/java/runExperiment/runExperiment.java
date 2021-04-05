@@ -12,7 +12,7 @@ public class runExperiment{
 				 "SelfRegulationSCP2",
 				 "FingerMovements",
 				 "MotorImagery",
-				 //"FaceDetection"
+				 "FaceDetection"
 		 };
 		
 		String[] classifiers = {
@@ -30,7 +30,7 @@ public class runExperiment{
 				exp.resultsWriteLocation = "results/";
 				exp.classifierName = classifier;
 				exp.datasetName = problem;
-				exp.foldId = 5;
+				exp.foldId = 10;
 				exp.generateErrorEstimateOnTrainSet = false;
 				//exp.run();
 				System.out.println(java.lang.Thread.activeCount());
