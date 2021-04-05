@@ -16,6 +16,10 @@ public class runExperiment{
 		 };
 		
 		String[] classifiers = {
+				
+				"MUSE",
+				"CBOSS",
+				"DTW_D",
 				"DTW_A",
 				"CIF",
 				"ROCKET",
