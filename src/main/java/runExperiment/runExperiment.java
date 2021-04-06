@@ -16,17 +16,16 @@ public class runExperiment{
 		 };
 		
 		String[] classifiers = {
-				
-				"MUSE",
-				"CBOSS",
-				"DTW_D",
+				//"CBOSS",
+				//"DTW_D",
 				"DTW_A",
 				"CIF",
 				"ROCKET",
+				"MUSE"
 		};
 
-		for (String problem : mtsProblems) {
-			for (String classifier : classifiers) {			    
+		for (String classifier : classifiers) {
+			for (String problem : mtsProblems) {			    
 			    System.out.println(problem + "\t" + classifier);
 				
 				ExperimentalArguments exp = new ExperimentalArguments ();
