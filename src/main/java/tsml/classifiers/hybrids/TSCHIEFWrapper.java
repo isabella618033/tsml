@@ -170,39 +170,21 @@ public class TSCHIEFWrapper extends AbstractClassifier implements MultiThreadabl
 
     public static void main(String[] args) throws Exception {
 
-//        ProximityForestWrapper pf = new ProximityForestWrapper();
-//        pf.setSeed(0);
-//        System.out.println(ClassifierTools.testUtils_getIPDAcc(pf));
-//        System.out.println(ClassifierTools.testUtils_confirmIPDReproduction(pf, 0.966958211856171, "2019_09_26"));
-
         Experiments.ExperimentalArguments exp = new Experiments.ExperimentalArguments();
-
-        exp.dataReadLocation = "src/main/java/experiments/data/tsc/Univariate_arff/";
-//        exp.dataReadLocation = "src/main/java/experiments/data/tsc/generated/";
+        
+        
+        int numFolds = 10;
+        String dataSource = "ARIMA";
         exp.resultsWriteLocation = "results/";
-        exp.classifierName = "TS-CHIEF";
-        String[] classifiers = { "TSCHIEF" };
-        
-//        File folder = new File(exp.dataReadLocation);
-//        File[] targetFiles = folder.listFiles();
-//        ArrayList<String> datasets = new ArrayList<String>();
-        
-//        int c = 0;
-//        for (int i = 0; i < datasets.length; i++) {
-//        	String name = targetFiles[i].getName();
-//        	String[] meta = name.split("_");
-//        	if ( Arrays.asList(300, 1000).contains(Integer.parseInt(meta[2].substring(1)) ) & (Integer.parseInt(meta[2].substring(1)) + Integer.parseInt(meta[3].substring(1)) < 1500 ) & !meta[0].equals("benchmark")){
-//        		datasets.add(name)
-//        	}
-//        }
-//        
-//        for (int i = 0; i< datasets.length; i++) {
-//        	System.out.println(datasets[i]);
-//        }
-        
-        String[] datasets = {
-        		//"Earthquakes",
-        		//"ECG200",
+        if (dataSource == "ARIMA") {
+        	exp.dataReadLocation = "src/main/java/experiments/data/tsc/generated/";
+        } else {
+        	exp.dataReadLocation = "src/main/java/experiments/data/tsc/Univariate_arff/";
+        }
+
+        String[] UCRdataset = {
+        		"Earthquakes",
+        		"ECG200",
         		"BeetleFly",
         		"BirdChicken",
         		"Chinatown",
@@ -244,11 +226,55 @@ public class TSCHIEFWrapper extends AbstractClassifier implements MultiThreadabl
         		"WormsTwoClass",
         		"Yoga",
         };
-        int numFolds = 5;
+        
+        if (args.length > 1) {
+        	System.out.println(args[0]);
+            dataSource = args[0];
+            exp.resultsWriteLocation = args[1];
+            exp.dataReadLocation = args[2];
+            UCRdataset = args[3].split(",");
+            numFolds =  Integer. parseInt(args[4]);
+        }
 
+        exp.classifierName = "TS-CHIEF";
+        ArrayList<String> datasets = new ArrayList<String>();
+        
+        
+    	System.out.println(dataSource);
+    	System.out.println(dataSource == "ARIMA");
+    	
+    	
+        if (dataSource.equals("ARIMA")) {
+
+          File folder = new File(exp.dataReadLocation);
+          File[] targetFiles = folder.listFiles();
+          
+          for (int i = 0; i < targetFiles.length; i++) {
+          	String name = targetFiles[i].getName();
+          	String[] meta = name.split("_");
+          	if ( !Arrays.asList("benchmark", "UEA").contains(meta[0]) ){
+          		if (
+          			Arrays.asList(300).contains(Integer.parseInt(meta[2].substring(1))) & 
+                 	Arrays.asList(250).contains(Integer.parseInt(meta[3].substring(1))) 
+                  	) {
+          			datasets.add(name);
+          		}
+          		
+          	}
+          }
+        }else {
+            for (String dataset : UCRdataset) {
+            	datasets.add(dataset);
+            }
+        }
+
+        for (int i = 0; i < datasets.size(); i++) {
+        	System.out.println(datasets.get(i));
+        }
 
         //Because of the static app context, best not run multithreaded, stick to single threaded
         for (String dataset : datasets) {
+        	System.out.println("problem: " + dataset + "\t classifier: TS-CHIEF");
             for (int f = 0; f < numFolds; f++) {
                 exp.datasetName = dataset;
                 exp.foldId = f;

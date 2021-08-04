@@ -3,7 +3,7 @@ import arff
 import glob
 import os
 
-inputPath = '/media/Isabunbun shared folder/TSC-Share/ORGSplited'
+inputPath = '/media/Isabunbun shared folder/TSC-Share/data/ORGSplited'
 outputPath =  '../java/experiments/data/tsc/generated'
 simulators = os.listdir(inputPath)
 

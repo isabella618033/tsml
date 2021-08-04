@@ -5,8 +5,8 @@ from os import listdir
 from os.path import isfile, join
 
 def setUpBackgroundDF():
-    mtsSummaryDF = pd.read_csv('/media/Isabunbun shared folder/TSC-Share/summaryMultivariate.csv', index_col = 0)
-    utsSummaryDF = pd.read_csv('/media/Isabunbun shared folder/TSC-Share/summaryUnivariate.csv', index_col = 0)
+    mtsSummaryDF = pd.read_csv('/media/Isabunbun shared folder/TSC-Share/results/metaData/summaryMultivariate.csv', index_col = 0)
+    utsSummaryDF = pd.read_csv('/media/Isabunbun shared folder/TSC-Share/results/metaData/summaryUnivariate.csv', index_col = 0)
     return (mtsSummaryDF, utsSummaryDF)
 
 def setUpClassificationParam(split, mtsSummaryDF, utsSummaryDF):
@@ -30,6 +30,7 @@ def setUpClassificationParam(split, mtsSummaryDF, utsSummaryDF):
     return(simModel, simParam, simNum, simLength)
 
 def fetchTITII(resultDir, ds, simParam):
+    swapped = False
     ACC_sum = 0
     TI_sum = 0
     TII_sum = 0
@@ -42,7 +43,7 @@ def fetchTITII(resultDir, ds, simParam):
         ACC_sum += sum(foldResultDF.iloc[:,0] == foldResultDF.iloc[:,1]) / len(foldResultDF)
         TI_sum += sum((foldResultDF.iloc[:,0] == 0) & (foldResultDF.iloc[:,1] == 1)) / len(foldResultDF[foldResultDF.iloc[:,0] == 0])
         TII_sum += sum((foldResultDF.iloc[:,0] == 1) & (foldResultDF.iloc[:,1] == 0)) / len(foldResultDF[foldResultDF.iloc[:,0] == 1])
-
+        #print(simParam, sum(foldResultDF.iloc[:,0] == 0), sum(foldResultDF.iloc[:,0] == 1))
     if foldCount >= 1:
         ACC = ACC_sum / foldCount
         TI = TI_sum / foldCount
@@ -52,11 +53,12 @@ def fetchTITII(resultDir, ds, simParam):
         TI = TI_sum
         TII = TII_sum
 
-    if simParam in ['SelfRegulationSCP1', 'SelfRegulationSCP2', 'FingerMovement', 'MotorImagery', 'ECG200', 'Earthquakes']:
+    if simParam in ['ECG200', 'Earthquakes', 'Heartbeat']:
         temp = TI
         TI = TII
         TII = temp
-    return (ACC, TI, TII, foldCount)
+        swapped = True
+    return (ACC, TI, TII, foldCount, swapped)
 
 def getbmClassifierResult():
     col = ["simModel", "simParam",  "sampleNum", "sampleLength", "classification","accuracy", "typeI", "typeII"]
@@ -71,10 +73,10 @@ def getbmClassifierResult():
                 continue
             split = ds.split('_')
             simModel, simParam, simNum, simLength = setUpClassificationParam(split, *backgroundDF)
-            ACC, TI, TII, foldCount = fetchTITII(resultDir, ds, simParam)
+            ACC, TI, TII, foldCount, swapped = fetchTITII(resultDir, ds, simParam)
             if foldCount >= 1:
-                resultDF = resultDF.append({'simModel': simModel, "simParam": simParam,"classification": classifier , "sampleNum": simNum, "sampleLength": simLength, "classification": classifier, 'accuracy': ACC, 'typeI': TI, 'typeII':TII, 'fold': foldCount} , ignore_index = True)
-    resultDF.to_csv("/media/Isabunbun shared folder/TSC-Share/bmClassifiers_resultSummary.csv")
+                resultDF = resultDF.append({'simModel': simModel, "simParam": simParam,"classification": classifier , "sampleNum": simNum, "sampleLength": simLength, "classification": classifier, 'accuracy': ACC, 'typeI': TI, 'typeII':TII, 'fold': foldCount, 'swapped': swapped} , ignore_index = True)
+    resultDF.to_csv("/media/Isabunbun shared folder/TSC-Share/results/tableSummary/results_bmClassifiers_groupedFold.csv")
 
 if __name__ == "__main__":
     getbmClassifierResult()
